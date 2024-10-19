@@ -11,5 +11,6 @@ group: KIRI2D
     <p class="card-text">
       Kiri2D is a tool for developing 2D graphics applications, which has already implemented Convex hull, Delaunay diagram, Voronoi diagram, Power diagram, Lloyd iteration and Voronoi treemap for arbitrary geometry boundary based on QuickHull algorithm. Additionally, it also support Straight skeleton, Poisson disk sampling, ProtoSphere packing and Multi-sized particle sampling method. 
     </p>
+     <p class="card-text"><small><a href="https://github.com/RaymondMcGuire/Kiri2D/" target="_blank">Give a star!</a></small></p>
   </div>
 </div>

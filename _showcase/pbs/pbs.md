@@ -11,5 +11,6 @@ group: PBS
     <p class="card-text">
     This project implemented several SPH-related papers using CUDA, including Weakly compressible SPH (SCA2007), Position based fluid (SIGGRAPH2013), Implicit incompressible SPH (TVCG2014), Divergence-free SPH (SCA2015), Volume fraction-based multiple-fluid (SIGGRAPH2014) and Helmholtz free energy based multiple-fluid (SIGGRAPH2015).
     </p>
+     <p class="card-text"><small><a href="https://raymondmcguire.github.io/Particle-Based-Fluid/" target="_blank">Give a star!</a></small></p>
   </div>
 </div>
