@@ -22,53 +22,65 @@ short_bio: >-
  My research interests encompass physics-based simulation, image processing, style transfer, and various other topics related to computer graphics.
 
 
-portrait_url: /assets/images/photos/portrait.jpg
+portrait_url: /assets/img/photos/portrait.jpg
 portrait_caption: >-
   Photo by Manja Vitolic on Unsplash (this caption is optional, comment it out to disable).
 
 education:
-  - name: University of Tsukuba
-    logo:
-    position: Ph.D. in Informatics
-    date: Apr 2020 - Sep 2023
-  - name: Tokyo University of Technology
-    logo:
-    position: M.S. in Media Science
-    date: Apr 2018 - Mar 2020
-  - name: Shanghai University
-    logo:
-    position: B.S. in Information Management and Information System
-    date: Sep 2012 - Jul 2016
+- name: Massachusetts Institute of Technology
+  logo: /assets/images/badges/MIT_Social_circle.png
+  position: >- 
+    Department of Electrical Engineering and Computer Science <br/>
+    Ph.D. Student
+  date: Sep. 2024 - present
+- name: Peking University
+  logo: /assets/images/badges/PKU_red.png
+  position: B.S. in Computer Science
+  date: Sep. 2019 - Jul. 2021
+  
+# education:
+#   - name: University of Tsukuba
+#     logo:
+#     position: Ph.D. in Informatics
+#     date: Apr 2020 - Sep 2023
+#   - name: Tokyo University of Technology
+#     logo:
+#     position: M.S. in Media Science
+#     date: Apr 2018 - Mar 2020
+#   - name: Shanghai University
+#     logo:
+#     position: B.S. in Information Management and Information System
+#     date: Sep 2012 - Jul 2016
 
-experience:
-  - name: Hokkaido University
-    logo:
-    position: Specially Appointed Assistant Professor
-    date: Oct 2024 - present
-  - name: AdvanceSoft
-    logo:
-    position: Researcher
-    date: Oct 2023 - Sep 2024
-  - name: Prometech Software
-    logo:
-    position: Research Intern
-    date: Apr 2023 - Sep 2023
-  - name: University of Tsukuba (Recommendation System Laboratory)
-    logo:
-    position: Research Assistant
-    date: Oct 2022 - Jan 2023
-  - name: Konica Minolta
-    logo:
-    position: Job-oriented Research Intern
-    date: Mar 2022 - May 2022
-  - name: University of Tsukuba (Physically-based Computer Graphics Laboratory)
-    logo:
-    position: Research Assistant
-    date: Sep 2020 - Feb 2022
-  - name: Silicon Studio
-    logo:
-    position: Middleware Engineering Intern
-    date: Jul 2018 - Dec 2018
+# experience:
+#   - name: Hokkaido University
+#     logo:
+#     position: Specially Appointed Assistant Professor
+#     date: Oct 2024 - present
+#   - name: AdvanceSoft
+#     logo:
+#     position: Researcher
+#     date: Oct 2023 - Sep 2024
+#   - name: Prometech Software
+#     logo:
+#     position: Research Intern
+#     date: Apr 2023 - Sep 2023
+#   - name: University of Tsukuba (Recommendation System Laboratory)
+#     logo:
+#     position: Research Assistant
+#     date: Oct 2022 - Jan 2023
+#   - name: Konica Minolta
+#     logo:
+#     position: Job-oriented Research Intern
+#     date: Mar 2022 - May 2022
+#   - name: University of Tsukuba (Physically-based Computer Graphics Laboratory)
+#     logo:
+#     position: Research Assistant
+#     date: Sep 2020 - Feb 2022
+#   - name: Silicon Studio
+#     logo:
+#     position: Middleware Engineering Intern
+#     date: Jul 2018 - Dec 2018
 
 # awards:
 # - name: Award Name 2
