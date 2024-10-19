@@ -1,6 +1,6 @@
 ---
 title: "Visual Simulation of Soil-Structure Destruction with Seepage Flows"
-date: 2022-01-01 00:00:00 +0800
+date: 2022-10-06 00:00:00 +0800
 selected: false
 pub: "VC+VCC2022"
 pub_date: "2022"
