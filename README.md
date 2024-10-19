@@ -1,1 +1,1 @@
-Personal academic page made by [academic-homepage](https://img.shields.io/github/stars/luost26/academic-homepage)
+Personal academic page made by [academic-homepage](https://github.com/luost26/academic-homepage)
