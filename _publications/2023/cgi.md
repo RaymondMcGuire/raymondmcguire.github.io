@@ -8,7 +8,7 @@ abstract: >-
   We propose a novel PSD-driven technique that extends the ProtoSphere algorithm to achieve multi-sized sphere packing with distribution-specific characteristics, as dictated by a pre-defined cumulative distribution function. Our method improves the controllability and flexibility of the packing process, enabling users to generate packing configurations that meet their specific requirements.
 cover: /assets/img/cgi2023_teaser.gif
 authors:
-  - Xu Wang*
+  - Xu Wang
   - Makoto Fujisawa
   - Masahiko Mikawa
 links:
