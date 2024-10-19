@@ -16,15 +16,17 @@ twitter:  # Do not include the '@' symbol
 
 short_bio_text_justify: true
 short_bio: >-
- My name is Wang Xu. I am currently a Specially Appointed Assistant Professor in the Intelligent Robots and Systems Laboratory at Hokkaido University. 
- Prior to this position, I worked as a researcher at AdvanceSoft, specializing in Nuclear Safety Analysis. 
- I obtained my Ph.D. in Informatics from the University of Tsukuba, where I was advised by Professors Makoto Fujisawa and Masahiko Mikawa. 
- My research interests encompass physics-based simulation, image processing, style transfer, and various other topics related to computer graphics.
-
+  <p>
+      My name is Xu WANG. I am currently a Specially Appointed Assistant Professor in the <a href="https://scc.ist.hokudai.ac.jp/index-e.html" target="_blank">Intelligent Robots and Systems Laboratory</a> at Hokkaido University. 
+  </p>
+  <p>
+  Prior to this position, I worked as a researcher at AdvanceSoft, specializing in Nuclear Safety Analysis. 
+  I obtained my Ph.D. in Informatics from the University of Tsukuba, where I was advised by Professors Makoto Fujisawa and Masahiko Mikawa. 
+  My research interests encompass physics-based simulation, image processing, style transfer, and various other topics related to computer graphics.
+  </p>
 
 portrait_url: /assets/img/photos/portrait.jpg
 portrait_caption: >-
-  Photo by Manja Vitolic on Unsplash (this caption is optional, comment it out to disable).
 
 
 
@@ -55,7 +57,9 @@ experience:
   logo:
   position: Research Intern
   date: Apr 2023 - Sep 2023
-- name: University of Tsukuba (Recommendation System Laboratory)
+- name: >-
+    University of Tsukuba <br/>
+    Recommendation System Laboratory
   logo:
   position: Research Assistant
   date: Oct 2022 - Jan 2023
@@ -63,7 +67,9 @@ experience:
   logo:
   position: Job-oriented Research Intern
   date: Mar 2022 - May 2022
-- name: University of Tsukuba (Physically-based Computer Graphics Laboratory)
+- name: >-
+    University of Tsukuba <br/>
+    Physically-based Computer Graphics Laboratory
   logo:
   position: Research Assistant
   date: Sep 2020 - Feb 2022
