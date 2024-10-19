@@ -27,18 +27,26 @@ portrait_caption: >-
   Photo by Manja Vitolic on Unsplash (this caption is optional, comment it out to disable).
 
 education:
-- name: University of Tsukuba
-  logo:
-  position: Ph.D. in Informatics
-  date: Apr 2020 - Sep 2023
-- name: Tokyo University of Technology
-  logo:
-  position: M.S. in Media Science
-  date: Apr 2018 - Mar 2020
-- name: Shanghai University
-  logo:
-  position: B.S. in Information Management and Information System
-  date: Sep 2012 - Jul 2016
+- name: Massachusetts Institute of Technology
+  position: >- 
+    Department of Electrical Engineering and Computer Science <br/>
+    Ph.D. Student
+  date: Sep. 2024 - present
+- name: Peking University
+  position: B.S. in Computer Science
+  date: Sep. 2019 - Jul. 2021
+# - name: University of Tsukuba
+#   logo:
+#   position: Ph.D. in Informatics
+#   date: Apr 2020 - Sep 2023
+# - name: Tokyo University of Technology
+#   logo:
+#   position: M.S. in Media Science
+#   date: Apr 2018 - Mar 2020
+# - name: Shanghai University
+#   logo:
+#   position: B.S. in Information Management and Information System
+#   date: Sep 2012 - Jul 2016
 
 experience:
 - name: Hokkaido University
