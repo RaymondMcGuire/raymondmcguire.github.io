@@ -5,7 +5,7 @@ selected: false
 pub: "IIEEJ International Conference on Image Electronics and Visual Computing (IEVC 2019)"
 pub_date: "2019"
 abstract: >-
-  This paper proposes a data-driven approach to reproduce artificial light sources in night view style transfer, utilizing luminance maps to enhance the realism of transformed images.
+  This paper proposes a data-driven approach to reproduce artificial light sources in night view style transfer, utilizing luminance maps to enhance the realism of transformed img.
 cover: /assets/img/ievc2019.png
 authors:
   - Xu Wang
