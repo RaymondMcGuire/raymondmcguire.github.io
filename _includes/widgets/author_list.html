@@ -25,17 +25,14 @@
         {%- assign name = key -%}
     {%- endif -%}
 
-    {# 组合名字和标记 #}
     {%- assign name_with_mark = name | append: mark -%}
     
-    {# 处理加粗 #}
     {%- if info['bold'] -%}
         {%- assign display_name = name_with_mark | prepend: "<strong>" | append: "</strong>" -%}
     {%- else -%}
         {%- assign display_name = name_with_mark -%}
     {%- endif -%}
 
-    {# 处理下划线 #}
     {%- if info['underline'] -%}
         {%- assign display_name = display_name | prepend: "<u>" | append: "</u>" -%}
     {%- endif -%}
