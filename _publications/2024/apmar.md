@@ -5,6 +5,6 @@ selected: false
 pub: "The 16th Asia-Pacific Workshop on Mixed and Augmented Reality (APMAR2024)"
 pub_date: "2024"
 authors:
-  - Xu Wang#
+  - Xu Wang
   - Atsushi Konno
 ---
