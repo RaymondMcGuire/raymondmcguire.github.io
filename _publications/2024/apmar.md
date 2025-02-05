@@ -7,4 +7,6 @@ pub_date: "2024"
 authors:
   - Xu Wang
   - Atsushi Konno
+links:
+  Paper: https://ceur-ws.org/Vol-3907/paper16.pdf
 ---
