@@ -17,9 +17,11 @@ twitter:  # Do not include the '@' symbol
 short_bio_text_justify: true
 short_bio: >-
   <p>
-      My name is <strong>Wang Xu</strong>. I am currently a <strong>Specially Appointed Assistant Professor</strong> in the <a href="https://scc.ist.hokudai.ac.jp/index-e.html" target="_blank"><strong>Intelligent Robots and Systems Laboratory</strong></a> at <strong>Hokkaido University</strong>. 
-      I obtained my <strong>Ph.D. in Informatics</strong> from the <strong>University of Tsukuba</strong>, where I was advised by Professors <strong>Makoto Fujisawa</strong> and <strong>Masahiko Mikawa</strong>. 
-      My research interests encompass <strong>physics-based simulation</strong>, <strong>image processing</strong>, <strong>style transfer</strong>, and various other topics related to <strong>computer graphics</strong>.
+    My name is <strong>Wang Xu</strong>. I am a <strong>Project Assistant Professor</strong> in the 
+    <a href="https://scc.ist.hokudai.ac.jp/index-e.html" target="_blank"><strong>Intelligent Robots and Systems Laboratory</strong></a> 
+    at <strong>Hokkaido University</strong>, where I work under the supervision of Professors <strong>Atsushi Konno</strong> and <strong>Satoshi Kanai</strong>. 
+    I received my <strong>Ph.D. in Informatics</strong> from the <strong>University of Tsukuba</strong>, advised by Professors <strong>Makoto Fujisawa</strong> and <strong>Masahiko Mikawa</strong>. 
+    My research interests include <strong>physics-based simulation</strong>, <strong>image processing</strong>, <strong>style transfer</strong>, and other topics in <strong>computer graphics</strong>.
   </p>
 
 portrait_url: /assets/img/photos/pic.jpg
