@@ -4,6 +4,7 @@ date: 2025-06-04 00:00:00 +0800
 selected: false
 pub: "ロボティクス・メカトロニクス講演会2025（ROBOMECH2025）"
 pub_date: "2025"
+cover: /assets/img/robomech2025.png
 authors:
   - 王 旭
   - 青木 大地
