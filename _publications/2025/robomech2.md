@@ -2,7 +2,7 @@
 title: "ARアバター実演表示による遠隔医療処置支援システムの開発"
 date: 2025-06-04 00:00:00 +0800
 selected: false
-pub: "ロボティクス・メカトロニクス講演会2025（ROBOMECH2025）"
+pub: "ロボティクス・メカトロニクス講演会（ROBOMECH）"
 pub_date: "2025"
 authors:
   - 三浦 知咲歩

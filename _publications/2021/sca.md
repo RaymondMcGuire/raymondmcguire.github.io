@@ -2,7 +2,7 @@
 title: "Visual Simulation of Soil-Structure Destruction with Seepage Flows"
 date: 2021-09-01 00:00:00 +0800
 selected: true
-pub: "Proceedings of the ACM on Computer Graphics and Interactive Techniques"
+pub: "Proceedings of the ACM on Computer Graphics and Interactive Techniques (ACM SIGGRAPH / Eurographics Symposium on Computer Animation)"
 pub_date: "2021"
 abstract: >-
   This paper introduces a method for simulating soil-structure coupling with water, involving visual effects such as wet granular materials, seepage flows, capillary action between grains, and dam breaking simulation.
