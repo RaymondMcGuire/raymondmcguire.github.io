@@ -1,7 +1,7 @@
 ---
 title: "Extending Bonded DEM for Solid-Fluid Interaction: A Coupled BDEM-SPH Simulation Framework"
 date: 2025-05-27 00:00:00 +0800
-selected: true
+selected: false
 pub: "33th International Conference in Central Europe on Computer Graphics, Visualization and Computer Vision (WSCG)"
 pub_date: "2025"
 abstract: >-
@@ -11,4 +11,6 @@ authors:
   - Wei Cui*
   - Xu Wang*
   - Makoto Fujisawa
+links:
+  Paper: http://wscg.zcu.cz/wscg2025/papers/2025_C37-full.pdf
 ---
