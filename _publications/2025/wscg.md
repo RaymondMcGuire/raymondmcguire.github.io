@@ -12,5 +12,5 @@ authors:
   - Xu Wang*
   - Makoto Fujisawa
 links:
-  Paper: http://wscg.zcu.cz/wscg2025/papers/2025_C37-full.pdf
+  Paper: https://doi.org/10.24132/CSRN.2025-20
 ---
