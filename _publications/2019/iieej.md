@@ -4,8 +4,6 @@ date: 2019-01-01 00:00:00 +0800
 selected: false
 pub: "画像電子学会誌"
 pub_date: "2019"
-abstract: >-
-  This study presents a novel approach to generate nighttime urban landscape img from daytime panoramic city views, enhancing visual representation techniques in image processing.
 cover: /assets/img/iieej2019.jpg
 authors:
   - Xu Wang
