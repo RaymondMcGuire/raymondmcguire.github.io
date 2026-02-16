@@ -77,6 +77,49 @@ h1{font-size:24px;margin:10px 0 4px;font-weight:700}
 /* spinner */
 .spin{display:inline-block;width:14px;height:14px;border:2px solid #7d8590;border-top-color:#e6edf3;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes sp{to{transform:rotate(360deg)}}
+
+/* 🐱 CAT ANIMATIONS */
+.cat{animation:catBreathe 2s ease-in-out infinite;transition:all .3s cubic-bezier(.4,0,.2,1)!important}
+.cat:hover{animation:catWiggle .5s ease-in-out infinite;transform:scale(1.15)}
+@keyframes catBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+@keyframes catWiggle{0%,100%{transform:rotate(-5deg) scale(1.15)}50%{transform:rotate(5deg) scale(1.15)}}
+
+/* cat position transition */
+.cat.moving{animation:catJump .4s ease-out}
+@keyframes catJump{0%{transform:scale(1) translateY(0)}30%{transform:scale(1.2) translateY(-8px) rotate(10deg)}60%{transform:scale(0.95) translateY(0) rotate(-5deg)}100%{transform:scale(1) translateY(0) rotate(0)}}
+
+/* 🎨 ENHANCED VISUALS */
+body{background:linear-gradient(135deg,#0d1117 0%,#1a1f2e 50%,#0d1117 100%)}
+
+.card{background:linear-gradient(145deg,#1a1f2e,#161b22);border:1px solid #30363d;box-shadow:0 30px 90px rgba(0,0,0,.7),0 0 1px rgba(255,255,255,.1) inset}
+
+/* glassmorphism buttons */
+.btn-action{background:rgba(22,27,34,.8);backdrop-filter:blur(10px);border:1px solid rgba(48,54,61,.6);box-shadow:0 4px 15px rgba(0,0,0,.3)}
+.btn-action:not(:disabled):hover{background:rgba(30,35,45,.9);border-color:#58a6ff;box-shadow:0 6px 20px rgba(88,166,255,.2),0 0 20px rgba(88,166,255,.1)}
+.btn-action.active{background:linear-gradient(135deg,rgba(35,134,54,.95),rgba(25,97,39,.95));border-color:#3fb950;box-shadow:0 0 25px rgba(63,185,80,.5),0 4px 15px rgba(35,134,54,.4)}
+
+/* enhanced cells */
+.empty{background:radial-gradient(circle at 30% 30%,#22272e,#1c2128);border:1px solid rgba(33,38,45,.4)}
+.edge{background:linear-gradient(135deg,#1a1f2a,#161b22);border:1px solid #30363d;box-shadow:0 0 5px rgba(88,166,255,.1) inset}
+.blk{background:radial-gradient(circle at 30% 30%,#8b2020,#6e1a1a);border:1px solid #da3633;box-shadow:0 0 10px rgba(218,54,51,.3)}
+
+/* enhanced highlights */
+.vm{background:radial-gradient(circle at 30% 30%,#15402a,#0d2818);border:2px solid #3fb950;box-shadow:0 0 15px rgba(63,185,80,.6),0 0 5px rgba(63,185,80,.3) inset;animation:pulse .8s ease-in-out infinite}
+.vb{background:radial-gradient(circle at 30% 30%,#4a3010,#2d1f10);border:2px solid #f0883e;box-shadow:0 0 15px rgba(240,136,62,.6),0 0 5px rgba(240,136,62,.3) inset;animation:pulse .8s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 15px rgba(63,185,80,.6),0 0 5px rgba(63,185,80,.3) inset}50%{box-shadow:0 0 25px rgba(63,185,80,.9),0 0 10px rgba(63,185,80,.5) inset}}
+
+/* enhanced cat styles */
+.cat1{background:radial-gradient(circle at 30% 30%,#5a4000,#3b2a00);border:2px solid #f0883e;box-shadow:0 0 20px rgba(240,136,62,.8),0 0 8px rgba(240,136,62,.4) inset}
+.cat2{background:radial-gradient(circle at 30% 30%,#2a4a6b,#1a2b3b);border:2px solid #58a6ff;box-shadow:0 0 20px rgba(88,166,255,.8),0 0 8px rgba(88,166,255,.4) inset}
+
+/* 🎆 VICTORY CONFETTI */
+.confetti{position:fixed;width:10px;height:10px;background:#f0883e;position:absolute;animation:confettiFall 3s linear forwards}
+@keyframes confettiFall{to{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+/* rematch button */
+.btn-rematch{background:linear-gradient(135deg,#58a6ff,#388bfd);color:#fff;border:none;padding:14px 24px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin:12px auto 10px;box-shadow:0 4px 20px rgba(88,166,255,.5);transition:all .3s;animation:rematchPulse 2s ease-in-out infinite}
+.btn-rematch:hover{box-shadow:0 6px 30px rgba(88,166,255,.8);transform:translateY(-3px) scale(1.05)}
+@keyframes rematchPulse{0%,100%{box-shadow:0 4px 20px rgba(88,166,255,.5)}50%{box-shadow:0 6px 30px rgba(88,166,255,.8)}}
 </style>
 </head>
 <body>
@@ -127,9 +170,9 @@ h1{font-size:24px;margin:10px 0 4px;font-weight:700}
          <span id="badge" class="badge b-wait">等待中</span></p>
     </div>
     <button class="btn-sm btn-home" onclick="goHome()">← 退出</button>
-    <button id="rstBtn" class="btn-sm btn-rst" onclick="resetGame()">再来一局</button>
   </div>
   <div class="sbar"><p id="stTxt" style="color:#7d8590"><span class="spin"></span>连接中…</p></div>
+  <button id="rstBtn" class="btn-rematch" onclick="resetGame()" style="display:none;max-width:440px;width:100%">🔄 再来一局</button>
   <div id="actionBtns" class="action-btns">
     <button id="moveBtn" class="btn-action" onclick="setActionMode('move')">🐾 移动猫咪</button>
     <button id="blockBtn" class="btn-action" onclick="setActionMode('block')">🚧 放置障碍</button>
@@ -409,7 +452,11 @@ function applyMove(player,r,c){
   const nextTurn=winner?player:(player==='cat1'?'cat2':'cat1');
 
   gs={...gs,cats:newCats,turn:nextTurn,winner};
-  send('state',gs); render(); syncStatus();
+  send('state',gs); render();
+
+  if(winner) triggerVictory(winner);
+
+  syncStatus();
 }
 
 function applyBlock(player,r,c){
@@ -424,10 +471,43 @@ function applyBlock(player,r,c){
 
 function resetGame(){
   if(myRole!=='cat1') return;
-  gs=mkState(); send('reset',gs);
+  gs=mkState();
   currentActionMode=null;
+  send('reset',gs);
   $('rstBtn').style.display='none';
-  render(); syncStatus();
+  render();
+  syncStatus();
+  st('🎮 新游戏开始！猫咪1先手','#58a6ff');
+}
+
+// ── Victory Effects ────────────────────────────────────────────────
+function triggerVictory(winner){
+  if(winner!==myRole) return;
+  setTimeout(()=>{
+    for(let i=0;i<50;i++){
+      setTimeout(()=>createConfetti(),i*30);
+    }
+  },200);
+}
+
+function createConfetti(){
+  const colors=['#f0883e','#58a6ff','#3fb950','#da3633','#f0d83e','#bc4aff'];
+  const confetti=document.createElement('div');
+  confetti.style.cssText=`
+    position:fixed;
+    width:${Math.random()*10+5}px;
+    height:${Math.random()*10+5}px;
+    background:${colors[Math.floor(Math.random()*colors.length)]};
+    left:${Math.random()*100}vw;
+    top:-10px;
+    border-radius:${Math.random()>0.5?'50%':'0'};
+    z-index:9999;
+    pointer-events:none;
+    animation:confettiFall ${Math.random()*2+2}s linear forwards;
+    transform:rotate(${Math.random()*360}deg);
+  `;
+  document.body.appendChild(confetti);
+  setTimeout(()=>confetti.remove(),5000);
 }
 
 // ── Render ────────────────────────────────────────────────────────────
@@ -494,7 +574,11 @@ function render(){
 
   updateActionButtons();
 
-  if(winner&&myRole==='cat1') $('rstBtn').style.display='';
+  if(winner&&myRole==='cat1'){
+    $('rstBtn').style.display='block';
+  } else {
+    $('rstBtn').style.display='none';
+  }
 }
 
 function updateActionButtons(){
