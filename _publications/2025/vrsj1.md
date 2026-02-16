@@ -2,7 +2,7 @@
 title: "ネオ・フッキアン制約によるリアルタイム弾性体切断シミュレータの開発"
 date: 2025-09-17 00:00:00 +0800
 selected: false
-pub: "第30回日本バーチャルリアリティ学会大会（VRSJ2025）"
+pub: "第30回日本バーチャルリアリティ学会大会（VRSJ）"
 pub_date: "2025"
 cover: /assets/img/vrsj/2025.jpg
 authors:

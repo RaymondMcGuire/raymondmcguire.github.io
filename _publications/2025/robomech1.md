@@ -2,7 +2,7 @@
 title: "ネオ・フッキアン制約による実時間人体変形シミュレーターの開発"
 date: 2025-06-04 00:00:00 +0800
 selected: false
-pub: "ロボティクス・メカトロニクス講演会2025（ROBOMECH2025）"
+pub: "ロボティクス・メカトロニクス講演会（ROBOMECH）"
 pub_date: "2025"
 cover: /assets/img/robomech2025.png
 authors:

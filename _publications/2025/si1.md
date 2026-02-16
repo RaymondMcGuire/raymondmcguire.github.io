@@ -2,7 +2,7 @@
 title: "WebRTCを用いた仮想手術向けXR遠隔支援システムの試作"
 date: 2025-12-10 00:00:00 +0800
 selected: false
-pub: "計測自動制御学会システムインテグレーション部門講演会（SI2025）"
+pub: "計測自動制御学会システムインテグレーション部門講演会（SI）"
 pub_date: "2025"
 cover: /assets/img/si/2025.png
 authors:
