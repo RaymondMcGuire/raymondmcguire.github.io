@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>围住神经喵</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.4.7/peerjs.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0d1117;color:#e6edf3;font-family:'Segoe UI',sans-serif;min-height:100vh}
+.screen{display:none}.screen.on{display:flex}
+
+#lobby{min-height:100vh;align-items:center;justify-content:center;padding:16px;flex-direction:column;gap:12px}
+.card{background:#161b22;border:1px solid #30363d;border-radius:20px;padding:34px 30px;max-width:400px;width:100%;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.6)}
+.emoji{font-size:58px;line-height:1}
+h1{font-size:24px;margin:10px 0 4px;font-weight:700}
+.sub{color:#7d8590;font-size:13px;margin-bottom:22px}
+
+.btn{display:block;width:100%;padding:13px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s;margin-bottom:10px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-red{background:linear-gradient(135deg,#da3633,#b91c1c);color:#fff}
+.btn-grn{padding:12px 18px;background:linear-gradient(135deg,#238636,#196127);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;white-space:nowrap}
+
+.join-row{display:flex;gap:8px;margin-bottom:6px}
+.join-row input{flex:1;padding:12px 14px;background:#0d1117;color:#e6edf3;border:1px solid #30363d;border-radius:12px;font-size:18px;outline:none;text-align:center;letter-spacing:5px;text-transform:uppercase}
+.join-row input:focus{border-color:#58a6ff}
+
+.err{color:#f85149;font-size:13px;min-height:18px;margin:2px 0 6px;word-break:break-all}
+.info{color:#7d8590;font-size:12px;margin-bottom:10px;line-height:1.5}
+
+#waitBox{display:none;background:#0d1117;border:1px solid #3fb950;border-radius:12px;padding:14px;margin-bottom:12px}
+#waitBox .wt{color:#3fb950;font-weight:700;font-size:13px;margin-bottom:6px}
+#waitCode{color:#e6edf3;font-size:30px;font-weight:800;letter-spacing:8px;margin-bottom:4px}
+#waitBox small{color:#7d8590;font-size:12px}
+
+.rules{background:#0d1117;border:1px solid #21262d;border-radius:12px;padding:13px 15px;text-align:left;margin-top:6px}
+.rules b.t{color:#58a6ff;font-size:13px}
+.rules p{color:#7d8590;font-size:12.5px;line-height:1.75;margin-top:5px}
+
+/* GAME */
+#game{flex-direction:column;align-items:center;padding:14px 10px;min-height:100vh}
+.ghdr{display:flex;align-items:center;gap:8px;width:100%;max-width:440px;margin-bottom:10px}
+.ghdr-info{flex:1}.ghdr-info h2{font-size:17px;font-weight:700}
+.ghdr-info p{color:#7d8590;font-size:12px;margin-top:1px}
+.sbar{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:9px 18px;margin-bottom:12px;text-align:center;width:100%;max-width:440px}
+.sbar p{font-size:14px;font-weight:600}
+#board{position:relative;flex-shrink:0}
+.cell{position:absolute;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0;user-select:none;transition:background .1s,box-shadow .1s}
+.empty{background:#1c2128}.edge{background:#161b22;border:1px solid #21262d}
+.blk{background:#6e1a1a;border:1px solid #da3633}
+.cat{background:#3b2a00;border:2px solid #f0883e;box-shadow:0 0 12px rgba(240,136,62,.65);font-size:18px}
+.vm{background:#0d2818;border:2px solid #3fb950;box-shadow:0 0 7px rgba(63,185,80,.4);cursor:pointer}
+.clk{cursor:pointer}
+.legend{display:flex;gap:14px;margin-top:12px;font-size:11px;color:#7d8590;flex-wrap:wrap;justify-content:center}
+.ld{display:flex;align-items:center;gap:4px}
+.ldot{display:inline-block;width:12px;height:12px;border-radius:50%}
+.btn-sm{padding:7px 13px;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600}
+.btn-home{background:#21262d;color:#e6edf3;border:1px solid #30363d}
+.btn-rst{background:#238636;color:#fff;display:none}
+.badge{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:700;vertical-align:middle;margin-left:4px}
+.b-on{background:#0d2818;color:#3fb950}.b-off{background:#2d1b1b;color:#f85149}.b-wait{background:#1c2210;color:#f0883e}
+
+/* spinner */
+.spin{display:inline-block;width:14px;height:14px;border:2px solid #7d8590;border-top-color:#e6edf3;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<!-- LOBBY -->
+<div id="lobby" class="screen on">
+  <div class="card">
+    <div class="emoji">🐱</div>
+    <h1>围住神经喵</h1>
+    <p class="sub">双人联机 · PeerJS P2P · 可部署 GitHub Pages</p>
+
+    <button id="createBtn" class="btn btn-red" onclick="createRoom()">🎮 创建房间（我是封锁者 🔴）</button>
+
+    <div id="waitBox">
+      <div class="wt">✅ 房间已创建，将以下号码分享给朋友</div>
+      <div id="waitCode"></div>
+      <small>对方输入房间号加入后，游戏自动开始</small>
+    </div>
+
+    <div class="join-row">
+      <input id="codeIn" placeholder="输入房间号" maxlength="6"
+             oninput="this.value=this.value.toUpperCase()"
+             onkeydown="if(event.key==='Enter')joinRoom()"/>
+      <button class="btn-grn" onclick="joinRoom()">加入</button>
+    </div>
+
+    <div id="errMsg" class="err"></div>
+    <div id="infoMsg" class="info"></div>
+
+    <div class="rules">
+      <b class="t">📖 游戏规则</b>
+      <p>🔴 <b style="color:#e6edf3">封锁者</b>：每回合点一个空格放置障碍，将猫完全围住即获胜<br>
+         🐱 <b style="color:#e6edf3">神经喵</b>：每回合移动到相邻空格，逃到棋盘边缘即获胜<br>
+         封锁者先手，轮流行动，开局随机放置 7 个障碍。</p>
+    </div>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="game" class="screen">
+  <div class="ghdr">
+    <div class="ghdr-info">
+      <h2>🐱 围住神经喵</h2>
+      <p>房间 <span id="roomTxt" style="color:#58a6ff;font-weight:700"></span>
+         &nbsp;我是 <span id="roleTxt"></span>
+         <span id="badge" class="badge b-wait">等待中</span></p>
+    </div>
+    <button class="btn-sm btn-home" onclick="goHome()">← 退出</button>
+    <button id="rstBtn" class="btn-sm btn-rst" onclick="resetGame()">再来一局</button>
+  </div>
+  <div class="sbar"><p id="stTxt" style="color:#7d8590"><span class="spin"></span>连接中…</p></div>
+  <div id="board"></div>
+  <div class="legend">
+    <span class="ld"><span class="ldot" style="background:#6e1a1a;border:1px solid #da3633"></span>障碍</span>
+    <span class="ld"><span class="ldot" style="background:#3b2a00;border:2px solid #f0883e"></span>猫咪🐱</span>
+    <span class="ld"><span class="ldot" style="background:#0d2818;border:2px solid #3fb950"></span>可移动</span>
+    <span class="ld"><span class="ldot" style="background:#1c2128"></span>空格</span>
+  </div>
+</div>
+
+<script>
+// ── Config ─────────────────────────────────────────────────────────
+const N=9, CS=34, GAP=4, STEP=CS+GAP, RH=30;
+const PEER_CFG = {
+  host: '0.peerjs.com', port: 443, path: '/', secure: true,
+  config: {iceServers:[
+    {urls:'stun:stun.l.google.com:19302'},
+    {urls:'stun:stun1.l.google.com:19302'}
+  ]}
+};
+
+// ── State ──────────────────────────────────────────────────────────
+let peer=null, conn=null, myRole=null, roomCode=null, gs=null;
+let linked=false, joinTimeout=null, retryCount=0;
+
+// ── Hex helpers ────────────────────────────────────────────────────
+const nbrs=(r,c)=>r%2===0
+  ?[[r-1,c-1],[r-1,c],[r,c-1],[r,c+1],[r+1,c-1],[r+1,c]]
+  :[[r-1,c],[r-1,c+1],[r,c-1],[r,c+1],[r+1,c],[r+1,c+1]];
+const inB=(r,c)=>r>=0&&r<N&&c>=0&&c<N;
+const isEdge=(r,c)=>r===0||r===N-1||c===0||c===N-1;
+const vMoves=(b,r,c)=>nbrs(r,c).filter(([nr,nc])=>inB(nr,nc)&&b[nr][nc]===0);
+const surrounded=(b,r,c)=>vMoves(b,r,c).length===0;
+
+// ── Helpers ────────────────────────────────────────────────────────
+function $(id){return document.getElementById(id);}
+function setErr(m){$('errMsg').textContent=m;}
+function setInfo(m){$('infoMsg').textContent=m;}
+function st(t,c){const e=$('stTxt');e.innerHTML=t;e.style.color=c||'#e6edf3';}
+function badge(s){ // 'on'|'off'|'wait'
+  const e=$('badge');
+  if(s==='on'){e.textContent='已连接';e.className='badge b-on';}
+  else if(s==='off'){e.textContent='已断开';e.className='badge b-off';}
+  else{e.textContent='等待中';e.className='badge b-wait';}
+}
+function randCode(){
+  const a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let s='';for(let i=0;i<6;i++)s+=a[Math.floor(Math.random()*a.length)];return s;
+}
+
+// ── Game state ─────────────────────────────────────────────────────
+function mkState(){
+  const b=Array(N).fill(null).map(()=>Array(N).fill(0));
+  let n=0;
+  while(n<7){const r=Math.floor(Math.random()*N),c=Math.floor(Math.random()*N);
+    if(!b[r][c]&&!(r===4&&c===4)){b[r][c]=1;n++;}}
+  return{board:b,cat:{r:4,c:4},turn:'blocker',winner:null};
+}
+
+// ── Send / Receive ──────────────────────────────────────────────────
+function send(type, data){
+  if(conn&&conn.open) conn.send(JSON.stringify({type,data}));
+}
+
+function onData(raw){
+  let m;
+  try{m=typeof raw==='string'?JSON.parse(raw):raw;}catch{return;}
+  if(m.type==='state'){
+    gs=m.data; render(); syncStatus();
+  } else if(m.type==='cat_move' && myRole==='blocker'){
+    applyMove(m.data.r, m.data.c);
+  } else if(m.type==='reset' && myRole==='cat'){
+    gs=m.data; render(); syncStatus();
+  }
+}
+
+function wireConn(c){
+  conn=c;
+  conn.on('open',()=>{
+    clearTimeout(joinTimeout);
+    linked=true; badge('on');
+    if(myRole==='blocker'){
+      gs=mkState(); send('state',gs); render(); syncStatus();
+    }
+  });
+  conn.on('data',onData);
+  conn.on('close',()=>{
+    linked=false; badge('off');
+    if(gs&&!gs.winner) st('⚠️ 对手断线了…','#f85149');
+  });
+  conn.on('error',(e)=>{
+    linked=false; badge('off');
+    st('⚠️ 连接错误: '+(e.message||e.type||e),'#f85149');
+  });
+}
+
+// ── Create room ─────────────────────────────────────────────────────
+function createRoom(){
+  setErr(''); setInfo(''); $('createBtn').disabled=true;
+  setInfo('正在连接信令服务器…');
+  destroyPeer();
+  const code=randCode();
+  roomCode=code; myRole='blocker';
+
+  peer=new Peer('nc-'+code, PEER_CFG);
+
+  peer.on('open',()=>{
+    setInfo('');
+    $('waitCode').textContent=code;
+    $('waitBox').style.display='block';
+    $('createBtn').style.display='none';
+    showGame();
+    st('<span class="spin"></span>等待对手加入… 房间号: '+code,'#f0883e');
+  });
+
+  peer.on('connection',c=>{ wireConn(c); });
+
+  peer.on('error',e=>{
+    $('createBtn').disabled=false;
+    const msg=e.message||e.type||String(e);
+    if(e.type==='unavailable-id'){
+      setInfo('房间号冲突，正在重试…');
+      retryCount++;
+      if(retryCount<5){ setTimeout(createRoom,500); }
+      else { retryCount=0; setErr('多次重试失败，请刷新页面再试'); setInfo(''); }
+    } else {
+      setErr('创建失败: '+msg);
+      setInfo('提示：如在本页面测试，信令服务器可能受限，请部署到 GitHub Pages 后再试');
+    }
+  });
+}
+
+// ── Join room ────────────────────────────────────────────────────────
+function joinRoom(){
+  const code=$('codeIn').value.trim().toUpperCase();
+  if(code.length<4){setErr('请输入房间号（4-6位）');return;}
+  setErr(''); setInfo('正在连接信令服务器…');
+  destroyPeer();
+  myRole='cat'; roomCode=code;
+
+  peer=new Peer(PEER_CFG);
+
+  peer.on('open',()=>{
+    setInfo('正在连接封锁者…');
+    conn=peer.connect('nc-'+code,{reliable:true,serialization:'json'});
+    wireConn(conn);
+    showGame();
+    st('<span class="spin"></span>正在连接房间 '+code+'…','#f0883e');
+
+    // 30s timeout
+    joinTimeout=setTimeout(()=>{
+      if(!linked){
+        st('⚠️ 连接超时，请确认房间号是否正确','#f85149');
+        badge('off');
+      }
+    },30000);
+  });
+
+  peer.on('error',e=>{
+    const msg=e.message||e.type||String(e);
+    if(e.type==='peer-unavailable'){
+      st('⚠️ 找不到该房间，请确认房间号','#f85149');
+      setErr('房间不存在或已关闭');
+      goHome();
+    } else {
+      st('⚠️ 错误: '+msg,'#f85149');
+      setErr('连接失败: '+msg+'\n提示：请部署到 GitHub Pages 后再尝试联机');
+    }
+  });
+}
+
+// ── Game logic ────────────────────────────────────────────────────────
+function handleClick(r,c){
+  if(!gs||gs.winner||!linked) return;
+  if(myRole==='blocker'&&gs.turn==='blocker'){
+    if(gs.board[r][c]||(r===gs.cat.r&&c===gs.cat.c)) return;
+    applyBlock(r,c);
+  } else if(myRole==='cat'&&gs.turn==='cat'){
+    const vm=vMoves(gs.board,gs.cat.r,gs.cat.c);
+    if(!vm.some(([nr,nc])=>nr===r&&nc===c)) return;
+    send('cat_move',{r,c});
+    st('⏳ 等待封锁者确认…','#7d8590');
+  }
+}
+
+function applyBlock(r,c){
+  const nb=gs.board.map(row=>[...row]); nb[r][c]=1;
+  const win=surrounded(nb,gs.cat.r,gs.cat.c)?'blocker':null;
+  gs={...gs,board:nb,turn:win?'blocker':'cat',winner:win};
+  send('state',gs); render(); syncStatus();
+}
+
+function applyMove(r,c){
+  if(!gs||gs.turn!=='cat'||gs.winner) return;
+  const vm=vMoves(gs.board,gs.cat.r,gs.cat.c);
+  if(!vm.some(([nr,nc])=>nr===r&&nc===c)) return;
+  const win=isEdge(r,c)?'cat':null;
+  gs={...gs,cat:{r,c},turn:win?'cat':'blocker',winner:win};
+  send('state',gs); render(); syncStatus();
+}
+
+function resetGame(){
+  if(myRole!=='blocker') return;
+  gs=mkState(); send('reset',gs);
+  $('rstBtn').style.display='none';
+  render(); syncStatus();
+}
+
+// ── Render ────────────────────────────────────────────────────────────
+function render(){
+  if(!gs||!gs.board) return;
+  const{board,cat,turn,winner}=gs;
+  const vm=myRole==='cat'&&turn==='cat'&&!winner?vMoves(board,cat.r,cat.c):[];
+  const wrap=$('board');
+  wrap.style.cssText=`position:relative;width:${N*STEP+STEP/2}px;height:${(N-1)*RH+CS}px`;
+  let html='';
+  for(let r=0;r<N;r++){
+    const ox=r%2?STEP/2:0;
+    for(let c=0;c<N;c++){
+      const x=ox+c*STEP, y=r*RH;
+      const isCat=cat&&cat.r===r&&cat.c===c;
+      const isBlk=board[r][c]===1;
+      const isVM=vm.some(([nr,nc])=>nr===r&&nc===c);
+      let cls='cell ';
+      if(isCat)cls+='cat';
+      else if(isBlk)cls+='blk';
+      else if(isVM)cls+='vm';
+      else if(isEdge(r,c))cls+='edge';
+      else cls+='empty';
+      const clickable=linked&&!winner&&(
+        (myRole==='blocker'&&turn==='blocker'&&!isCat&&!isBlk)||
+        (myRole==='cat'&&turn==='cat'&&isVM)
+      );
+      if(clickable)cls+=' clk';
+      const oc=clickable?`onclick="handleClick(${r},${c})"`:'';
+      html+=`<div class="${cls}" style="left:${x}px;top:${y}px;width:${CS}px;height:${CS}px" ${oc}>${isCat?'🐱':''}</div>`;
+    }
+  }
+  wrap.innerHTML=html;
+  if(winner&&myRole==='blocker') $('rstBtn').style.display='';
+}
+
+function syncStatus(){
+  if(!gs) return;
+  const{turn,winner}=gs;
+  if(winner){
+    const win=winner===myRole;
+    st(win?(winner==='blocker'?'🎉 你成功围住了猫咪！':'🎉 猫咪逃脱成功，你赢了！')
+          :(winner==='blocker'?'😿 猫咪被围住了，你输了…':'😿 封锁者围住了你，你输了…'),
+       win?'#3fb950':'#f85149');
+    return;
+  }
+  if(turn===myRole)
+    st(myRole==='blocker'?'✨ 你的回合！点击空格放置障碍':'✨ 你的回合！点击绿色格子移动','#58a6ff');
+  else
+    st(`⏳ 等待${turn==='blocker'?'封锁者':'猫咪'}行动…`,'#7d8590');
+}
+
+// ── Nav ──────────────────────────────────────────────────────────────
+function showGame(){
+  $('lobby').classList.remove('on');
+  $('game').classList.add('on');
+  $('roomTxt').textContent=roomCode;
+  $('roleTxt').innerHTML=myRole==='blocker'
+    ?'<span style="color:#f85149;font-weight:700">🔴 封锁者</span>'
+    :'<span style="color:#f0883e;font-weight:700">🐱 猫咪</span>';
+}
+
+function goHome(){
+  clearTimeout(joinTimeout);
+  destroyPeer();
+  gs=null; myRole=null; roomCode=null; linked=false; retryCount=0;
+  $('game').classList.remove('on'); $('lobby').classList.add('on');
+  $('waitBox').style.display='none'; $('createBtn').style.display='';
+  $('createBtn').disabled=false; $('codeIn').value='';
+  $('rstBtn').style.display='none';
+  setErr(''); setInfo('');
+}
+
+function destroyPeer(){
+  if(peer){try{peer.destroy();}catch{}peer=null;}
+  conn=null; linked=false; badge('wait');
+}
+</script>
+</body>
+</html>
