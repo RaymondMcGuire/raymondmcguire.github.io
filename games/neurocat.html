@@ -60,6 +60,20 @@ h1{font-size:24px;margin:10px 0 4px;font-weight:700}
 .badge{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:700;vertical-align:middle;margin-left:4px}
 .b-on{background:#0d2818;color:#3fb950}.b-off{background:#2d1b1b;color:#f85149}.b-wait{background:#1c2210;color:#f0883e}
 
+/* action buttons */
+.action-btns{display:flex;gap:8px;margin-bottom:12px;max-width:440px;width:100%}
+.btn-action{flex:1;padding:12px;border:2px solid #30363d;border-radius:10px;background:#161b22;color:#e6edf3;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-action:disabled{opacity:.4;cursor:not-allowed}
+.btn-action.active{background:#238636;border-color:#3fb950;color:#fff;box-shadow:0 0 12px rgba(63,185,80,.4)}
+.btn-action:not(:disabled):hover{border-color:#58a6ff}
+
+/* dual cats */
+.cat1{background:#3b2a00;border:2px solid #f0883e;box-shadow:0 0 12px rgba(240,136,62,.65)}
+.cat2{background:#1a2b3b;border:2px solid #58a6ff;box-shadow:0 0 12px rgba(88,166,255,.65)}
+
+/* block highlight */
+.vb{background:#2d1f10;border:2px solid #f0883e;box-shadow:0 0 7px rgba(240,136,62,.4);cursor:pointer}
+
 /* spinner */
 .spin{display:inline-block;width:14px;height:14px;border:2px solid #7d8590;border-top-color:#e6edf3;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes sp{to{transform:rotate(360deg)}}
@@ -74,7 +88,7 @@ h1{font-size:24px;margin:10px 0 4px;font-weight:700}
     <h1>围住神经喵</h1>
     <p class="sub">双人联机 · PeerJS P2P · 可部署 GitHub Pages</p>
 
-    <button id="createBtn" class="btn btn-red" onclick="createRoom()">🎮 创建房间（我是封锁者 🔴）</button>
+    <button id="createBtn" class="btn btn-red" onclick="createRoom()">🎮 创建房间（我是猫咪1 🐱）</button>
 
     <div id="waitBox">
       <div class="wt">✅ 房间已创建，将以下号码分享给朋友</div>
@@ -94,9 +108,11 @@ h1{font-size:24px;margin:10px 0 4px;font-weight:700}
 
     <div class="rules">
       <b class="t">📖 游戏规则</b>
-      <p>🔴 <b style="color:#e6edf3">封锁者</b>：每回合点一个空格放置障碍，将猫完全围住即获胜<br>
-         🐱 <b style="color:#e6edf3">神经喵</b>：每回合移动到相邻空格，逃到棋盘边缘即获胜<br>
-         封锁者先手，轮流行动，开局随机放置 7 个障碍。</p>
+      <p>🐱 <b style="color:#f0883e">猫咪1</b>（橙色）：起始顶部，目标到达底部边缘<br>
+         😺 <b style="color:#58a6ff">猫咪2</b>（蓝色）：起始底部，目标到达顶部边缘<br>
+         每回合可选择：<b>移动自己的猫</b> 或 <b>给对方放障碍</b><br>
+         ⚠️ 放置障碍时，必须保证对方仍有路径到达目标边缘<br>
+         先到达对面边缘的猫获胜！猫咪1先手。</p>
     </div>
   </div>
 </div>
@@ -114,12 +130,17 @@ h1{font-size:24px;margin:10px 0 4px;font-weight:700}
     <button id="rstBtn" class="btn-sm btn-rst" onclick="resetGame()">再来一局</button>
   </div>
   <div class="sbar"><p id="stTxt" style="color:#7d8590"><span class="spin"></span>连接中…</p></div>
+  <div id="actionBtns" class="action-btns">
+    <button id="moveBtn" class="btn-action" onclick="setActionMode('move')">🐾 移动猫咪</button>
+    <button id="blockBtn" class="btn-action" onclick="setActionMode('block')">🚧 放置障碍</button>
+  </div>
   <div id="board"></div>
   <div class="legend">
+    <span class="ld"><span class="ldot cat1"></span>猫咪1🐱（橙）</span>
+    <span class="ld"><span class="ldot cat2"></span>猫咪2😺（蓝）</span>
     <span class="ld"><span class="ldot" style="background:#6e1a1a;border:1px solid #da3633"></span>障碍</span>
-    <span class="ld"><span class="ldot" style="background:#3b2a00;border:2px solid #f0883e"></span>猫咪🐱</span>
     <span class="ld"><span class="ldot" style="background:#0d2818;border:2px solid #3fb950"></span>可移动</span>
-    <span class="ld"><span class="ldot" style="background:#1c2128"></span>空格</span>
+    <span class="ld"><span class="ldot" style="background:#2d1f10;border:2px solid #f0883e"></span>可放障碍</span>
   </div>
 </div>
 
@@ -137,6 +158,7 @@ const PEER_CFG = {
 // ── State ──────────────────────────────────────────────────────────
 let peer=null, conn=null, myRole=null, roomCode=null, gs=null;
 let linked=false, joinTimeout=null, retryCount=0;
+let currentActionMode=null;
 
 // ── Hex helpers ────────────────────────────────────────────────────
 const nbrs=(r,c)=>r%2===0
@@ -146,6 +168,51 @@ const inB=(r,c)=>r>=0&&r<N&&c>=0&&c<N;
 const isEdge=(r,c)=>r===0||r===N-1||c===0||c===N-1;
 const vMoves=(b,r,c)=>nbrs(r,c).filter(([nr,nc])=>inB(nr,nc)&&b[nr][nc]===0);
 const surrounded=(b,r,c)=>vMoves(b,r,c).length===0;
+
+// ── BFS Path Validation ────────────────────────────────────────────
+function hasPathToGoal(board, sr, sc, goalCheck) {
+  const visited = Array(N).fill(null).map(() => Array(N).fill(false));
+  const queue = [[sr, sc]];
+  visited[sr][sc] = true;
+
+  while(queue.length > 0) {
+    const [r, c] = queue.shift();
+    if(goalCheck(r, c)) return true;
+
+    for(const [nr, nc] of nbrs(r, c)) {
+      if(inB(nr, nc) && !visited[nr][nc] && board[nr][nc] === 0) {
+        visited[nr][nc] = true;
+        queue.push([nr, nc]);
+      }
+    }
+  }
+  return false;
+}
+
+function canCat1Reach(board, cat1r, cat1c) {
+  return hasPathToGoal(board, cat1r, cat1c, (r, c) => r === N - 1);
+}
+
+function canCat2Reach(board, cat2r, cat2c) {
+  return hasPathToGoal(board, cat2r, cat2c, (r, c) => r === 0);
+}
+
+function isValidBlock(board, cats, blockR, blockC, currentPlayer) {
+  if((cats.cat1.r === blockR && cats.cat1.c === blockC) ||
+     (cats.cat2.r === blockR && cats.cat2.c === blockC)) {
+    return false;
+  }
+
+  const testBoard = board.map(row => [...row]);
+  testBoard[blockR][blockC] = 1;
+
+  const opponent = currentPlayer === 'cat1' ? 'cat2' : 'cat1';
+  if(opponent === 'cat1') {
+    return canCat1Reach(testBoard, cats.cat1.r, cats.cat1.c);
+  } else {
+    return canCat2Reach(testBoard, cats.cat2.r, cats.cat2.c);
+  }
+}
 
 // ── Helpers ────────────────────────────────────────────────────────
 function $(id){return document.getElementById(id);}
@@ -167,9 +234,11 @@ function randCode(){
 function mkState(){
   const b=Array(N).fill(null).map(()=>Array(N).fill(0));
   let n=0;
-  while(n<7){const r=Math.floor(Math.random()*N),c=Math.floor(Math.random()*N);
-    if(!b[r][c]&&!(r===4&&c===4)){b[r][c]=1;n++;}}
-  return{board:b,cat:{r:4,c:4},turn:'blocker',winner:null};
+  while(n<3){
+    const r=Math.floor(Math.random()*N),c=Math.floor(Math.random()*N);
+    if(!b[r][c]&&r!==0&&r!==N-1&&c!==4){b[r][c]=1;n++;}
+  }
+  return{board:b,cats:{cat1:{r:0,c:4},cat2:{r:8,c:4}},turn:'cat1',winner:null};
 }
 
 // ── Send / Receive ──────────────────────────────────────────────────
@@ -182,10 +251,15 @@ function onData(raw){
   try{m=typeof raw==='string'?JSON.parse(raw):raw;}catch{return;}
   if(m.type==='state'){
     gs=m.data; render(); syncStatus();
-  } else if(m.type==='cat_move' && myRole==='blocker'){
-    applyMove(m.data.r, m.data.c);
-  } else if(m.type==='reset' && myRole==='cat'){
-    gs=m.data; render(); syncStatus();
+  } else if(m.type==='action'){
+    if(m.data.player===myRole) return;
+    if(m.data.type==='move'){
+      applyMove(m.data.player,m.data.r,m.data.c);
+    } else if(m.data.type==='block'){
+      applyBlock(m.data.player,m.data.r,m.data.c);
+    }
+  } else if(m.type==='reset'){
+    gs=m.data; currentActionMode=null; render(); syncStatus();
   }
 }
 
@@ -194,7 +268,7 @@ function wireConn(c){
   conn.on('open',()=>{
     clearTimeout(joinTimeout);
     linked=true; badge('on');
-    if(myRole==='blocker'){
+    if(myRole==='cat1'){
       gs=mkState(); send('state',gs); render(); syncStatus();
     }
   });
@@ -215,7 +289,7 @@ function createRoom(){
   setInfo('正在连接信令服务器…');
   destroyPeer();
   const code=randCode();
-  roomCode=code; myRole='blocker';
+  roomCode=code; myRole='cat1';
 
   peer=new Peer('nc-'+code, PEER_CFG);
 
@@ -251,12 +325,12 @@ function joinRoom(){
   if(code.length<4){setErr('请输入房间号（4-6位）');return;}
   setErr(''); setInfo('正在连接信令服务器…');
   destroyPeer();
-  myRole='cat'; roomCode=code;
+  myRole='cat2'; roomCode=code;
 
   peer=new Peer(PEER_CFG);
 
   peer.on('open',()=>{
-    setInfo('正在连接封锁者…');
+    setInfo('正在连接猫咪1…');
     conn=peer.connect('nc-'+code,{reliable:true,serialization:'json'});
     wireConn(conn);
     showGame();
@@ -285,38 +359,73 @@ function joinRoom(){
 }
 
 // ── Game logic ────────────────────────────────────────────────────────
-function handleClick(r,c){
-  if(!gs||gs.winner||!linked) return;
-  if(myRole==='blocker'&&gs.turn==='blocker'){
-    if(gs.board[r][c]||(r===gs.cat.r&&c===gs.cat.c)) return;
-    applyBlock(r,c);
-  } else if(myRole==='cat'&&gs.turn==='cat'){
-    const vm=vMoves(gs.board,gs.cat.r,gs.cat.c);
-    if(!vm.some(([nr,nc])=>nr===r&&nc===c)) return;
-    send('cat_move',{r,c});
-    st('⏳ 等待封锁者确认…','#7d8590');
-  }
+function setActionMode(mode){
+  if(!gs||gs.winner||!linked||gs.turn!==myRole) return;
+  currentActionMode=mode;
+  render();
 }
 
-function applyBlock(r,c){
-  const nb=gs.board.map(row=>[...row]); nb[r][c]=1;
-  const win=surrounded(nb,gs.cat.r,gs.cat.c)?'blocker':null;
-  gs={...gs,board:nb,turn:win?'blocker':'cat',winner:win};
+function handleClick(r,c){
+  if(!gs||gs.winner||!linked||gs.turn!==myRole) return;
+
+  if(!currentActionMode){
+    st('⚠️ 请先选择行动：移动猫咪 或 放置障碍','#f0883e');
+    return;
+  }
+
+  const myCat=gs.cats[myRole];
+
+  if(currentActionMode==='move'){
+    const vm=vMoves(gs.board,myCat.r,myCat.c);
+    if(!vm.some(([nr,nc])=>nr===r&&nc===c)) return;
+    send('action',{type:'move',player:myRole,r,c});
+    applyMove(myRole,r,c);
+  } else if(currentActionMode==='block'){
+    if(gs.board[r][c]===1) return;
+    if((gs.cats.cat1.r===r&&gs.cats.cat1.c===c)||
+       (gs.cats.cat2.r===r&&gs.cats.cat2.c===c)){
+      st('⚠️ 不能在猫的位置放置障碍','#f85149');
+      return;
+    }
+    if(!isValidBlock(gs.board,gs.cats,r,c,myRole)){
+      st('⚠️ 该障碍会堵死对方所有路径，请选择其他位置','#f85149');
+      return;
+    }
+    send('action',{type:'block',player:myRole,r,c});
+    applyBlock(myRole,r,c);
+  }
+
+  currentActionMode=null;
+}
+
+function applyMove(player,r,c){
+  const newCats={...gs.cats};
+  newCats[player]={r,c};
+
+  let winner=null;
+  if(player==='cat1'&&r===N-1) winner='cat1';
+  if(player==='cat2'&&r===0) winner='cat2';
+
+  const nextTurn=winner?player:(player==='cat1'?'cat2':'cat1');
+
+  gs={...gs,cats:newCats,turn:nextTurn,winner};
   send('state',gs); render(); syncStatus();
 }
 
-function applyMove(r,c){
-  if(!gs||gs.turn!=='cat'||gs.winner) return;
-  const vm=vMoves(gs.board,gs.cat.r,gs.cat.c);
-  if(!vm.some(([nr,nc])=>nr===r&&nc===c)) return;
-  const win=isEdge(r,c)?'cat':null;
-  gs={...gs,cat:{r,c},turn:win?'cat':'blocker',winner:win};
+function applyBlock(player,r,c){
+  const newBoard=gs.board.map(row=>[...row]);
+  newBoard[r][c]=1;
+
+  const nextTurn=player==='cat1'?'cat2':'cat1';
+
+  gs={...gs,board:newBoard,turn:nextTurn};
   send('state',gs); render(); syncStatus();
 }
 
 function resetGame(){
-  if(myRole!=='blocker') return;
+  if(myRole!=='cat1') return;
   gs=mkState(); send('reset',gs);
+  currentActionMode=null;
   $('rstBtn').style.display='none';
   render(); syncStatus();
 }
@@ -324,8 +433,26 @@ function resetGame(){
 // ── Render ────────────────────────────────────────────────────────────
 function render(){
   if(!gs||!gs.board) return;
-  const{board,cat,turn,winner}=gs;
-  const vm=myRole==='cat'&&turn==='cat'&&!winner?vMoves(board,cat.r,cat.c):[];
+  const{board,cats,turn,winner}=gs;
+
+  const myCat=cats[myRole];
+  let highlightCells=[];
+  if(!winner&&turn===myRole&&linked){
+    if(currentActionMode==='move'){
+      highlightCells=vMoves(board,myCat.r,myCat.c);
+    } else if(currentActionMode==='block'){
+      for(let r=0;r<N;r++){
+        for(let c=0;c<N;c++){
+          if(board[r][c]===0&&
+             !(cats.cat1.r===r&&cats.cat1.c===c)&&
+             !(cats.cat2.r===r&&cats.cat2.c===c)){
+            highlightCells.push([r,c]);
+          }
+        }
+      }
+    }
+  }
+
   const wrap=$('board');
   wrap.style.cssText=`position:relative;width:${N*STEP+STEP/2}px;height:${(N-1)*RH+CS}px`;
   let html='';
@@ -333,26 +460,68 @@ function render(){
     const ox=r%2?STEP/2:0;
     for(let c=0;c<N;c++){
       const x=ox+c*STEP, y=r*RH;
-      const isCat=cat&&cat.r===r&&cat.c===c;
+      const isCat1=cats.cat1.r===r&&cats.cat1.c===c;
+      const isCat2=cats.cat2.r===r&&cats.cat2.c===c;
       const isBlk=board[r][c]===1;
-      const isVM=vm.some(([nr,nc])=>nr===r&&nc===c);
+      const isHL=highlightCells.some(([nr,nc])=>nr===r&&nc===c);
       let cls='cell ';
-      if(isCat)cls+='cat';
-      else if(isBlk)cls+='blk';
-      else if(isVM)cls+='vm';
-      else if(isEdge(r,c))cls+='edge';
-      else cls+='empty';
-      const clickable=linked&&!winner&&(
-        (myRole==='blocker'&&turn==='blocker'&&!isCat&&!isBlk)||
-        (myRole==='cat'&&turn==='cat'&&isVM)
-      );
+      let emoji='';
+
+      if(isCat1){
+        cls+='cat cat1';
+        emoji='🐱';
+      } else if(isCat2){
+        cls+='cat cat2';
+        emoji='😺';
+      } else if(isBlk){
+        cls+='blk';
+      } else if(isHL){
+        cls+=currentActionMode==='move'?'vm':'vb';
+      } else if(isEdge(r,c)){
+        cls+='edge';
+      } else {
+        cls+='empty';
+      }
+
+      const clickable=!winner&&turn===myRole&&linked&&isHL;
       if(clickable)cls+=' clk';
+
       const oc=clickable?`onclick="handleClick(${r},${c})"`:'';
-      html+=`<div class="${cls}" style="left:${x}px;top:${y}px;width:${CS}px;height:${CS}px" ${oc}>${isCat?'🐱':''}</div>`;
+      html+=`<div class="${cls}" style="left:${x}px;top:${y}px;width:${CS}px;height:${CS}px" ${oc}>${emoji}</div>`;
     }
   }
   wrap.innerHTML=html;
-  if(winner&&myRole==='blocker') $('rstBtn').style.display='';
+
+  updateActionButtons();
+
+  if(winner&&myRole==='cat1') $('rstBtn').style.display='';
+}
+
+function updateActionButtons(){
+  const moveBtn=$('moveBtn');
+  const blockBtn=$('blockBtn');
+
+  if(!gs||gs.winner||!linked||gs.turn!==myRole){
+    moveBtn.disabled=true;
+    blockBtn.disabled=true;
+    moveBtn.classList.remove('active');
+    blockBtn.classList.remove('active');
+    return;
+  }
+
+  moveBtn.disabled=false;
+  blockBtn.disabled=false;
+
+  if(currentActionMode==='move'){
+    moveBtn.classList.add('active');
+    blockBtn.classList.remove('active');
+  } else if(currentActionMode==='block'){
+    moveBtn.classList.remove('active');
+    blockBtn.classList.add('active');
+  } else {
+    moveBtn.classList.remove('active');
+    blockBtn.classList.remove('active');
+  }
 }
 
 function syncStatus(){
@@ -360,15 +529,23 @@ function syncStatus(){
   const{turn,winner}=gs;
   if(winner){
     const win=winner===myRole;
-    st(win?(winner==='blocker'?'🎉 你成功围住了猫咪！':'🎉 猫咪逃脱成功，你赢了！')
-          :(winner==='blocker'?'😿 猫咪被围住了，你输了…':'😿 封锁者围住了你，你输了…'),
+    const goalText=winner==='cat1'?'到达底部':'到达顶部';
+    st(win?`🎉 恭喜！你的猫咪${goalText}，你赢了！`
+          :`😿 对手的猫咪${goalText}，你输了…`,
        win?'#3fb950':'#f85149');
     return;
   }
-  if(turn===myRole)
-    st(myRole==='blocker'?'✨ 你的回合！点击空格放置障碍':'✨ 你的回合！点击绿色格子移动','#58a6ff');
-  else
-    st(`⏳ 等待${turn==='blocker'?'封锁者':'猫咪'}行动…`,'#7d8590');
+  if(turn===myRole){
+    if(!currentActionMode){
+      st('✨ 你的回合！请选择行动：移动猫咪 或 放置障碍','#58a6ff');
+    } else if(currentActionMode==='move'){
+      st('✨ 移动模式：点击绿色格子移动你的猫咪','#3fb950');
+    } else {
+      st('✨ 障碍模式：点击空格放置障碍（不能堵死对方所有路径）','#f0883e');
+    }
+  } else {
+    st(`⏳ 等待对手行动…`,'#7d8590');
+  }
 }
 
 // ── Nav ──────────────────────────────────────────────────────────────
@@ -376,15 +553,15 @@ function showGame(){
   $('lobby').classList.remove('on');
   $('game').classList.add('on');
   $('roomTxt').textContent=roomCode;
-  $('roleTxt').innerHTML=myRole==='blocker'
-    ?'<span style="color:#f85149;font-weight:700">🔴 封锁者</span>'
-    :'<span style="color:#f0883e;font-weight:700">🐱 猫咪</span>';
+  $('roleTxt').innerHTML=myRole==='cat1'
+    ?'<span style="color:#f0883e;font-weight:700">🐱 猫咪1</span>'
+    :'<span style="color:#58a6ff;font-weight:700">😺 猫咪2</span>';
 }
 
 function goHome(){
   clearTimeout(joinTimeout);
   destroyPeer();
-  gs=null; myRole=null; roomCode=null; linked=false; retryCount=0;
+  gs=null; myRole=null; roomCode=null; linked=false; retryCount=0; currentActionMode=null;
   $('game').classList.remove('on'); $('lobby').classList.add('on');
   $('waitBox').style.display='none'; $('createBtn').style.display='';
   $('createBtn').disabled=false; $('codeIn').value='';
