@@ -16,4 +16,6 @@ authors:
   - Takashige Abe
   - Satoshi Kanai
   - Atsushi Konno
+links:
+  Paper: https://doi.org/10.1007/s00371-023-02977-w
 ---
