@@ -18,5 +18,5 @@ authors:
   - Satoshi Kanai
   - Atsushi Konno
 links:
-  - Paper: https://ieeexplore.ieee.org/abstract/document/11246383
+  Paper: https://ieeexplore.ieee.org/abstract/document/11246383
 ---
