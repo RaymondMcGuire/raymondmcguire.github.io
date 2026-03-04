@@ -17,4 +17,6 @@ authors:
   - Takashige Abe
   - Satoshi Kanai
   - Atsushi Konno
+links:
+  - Paper: https://ieeexplore.ieee.org/abstract/document/11246383
 ---
