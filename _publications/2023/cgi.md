@@ -10,7 +10,7 @@ authors:
   - Makoto Fujisawa
   - Masahiko Mikawa
 links:
-  Paper: https://doi.org/10.1007/s00371-023-02977-w
+  Paper: https://rdcu.be/dgafz
   Website: https://raymondmcguire.github.io/xprotosphere/
   Code: https://github.com/RaymondMcGuire/xprotosphere/
 ---
