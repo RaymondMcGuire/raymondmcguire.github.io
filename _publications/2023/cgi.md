@@ -2,7 +2,7 @@
 title: "XProtoSphere: an eXtended Multi-Sized Sphere Packing Algorithm Driven by Particle Size Distribution"
 date: 2023-08-01 00:00:00 +0800
 selected: true
-pub: "The Visual Computer (Computer Graphics International)"
+pub: "The Visual Computer"
 pub_date: "2023"
 cover: /assets/img/cgi/2023.gif
 authors:
