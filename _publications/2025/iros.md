@@ -11,7 +11,7 @@ authors:
   - Zechen Zhu
   - Soichi Murakami
   - Takashi Shimoe
-  - Taku Senoo1
+  - Taku Senoo
   - Hiroaki Date
   - Toshiaki Shichinohe
   - Takashige Abe
