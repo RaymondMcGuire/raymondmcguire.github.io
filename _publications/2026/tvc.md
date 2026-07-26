@@ -2,7 +2,7 @@
 title: "Residual-driven Chebyshev acceleration for Jacobi Neo-Hookean XPBDsolver"
 date: 2026-06-28 00:00:00 +0800
 selected: true
-pub: "The Visual Computer"
+pub: "The Visual Computer [CGI]"
 pub_date: "2026"
 cover: /assets/img/cgi/2026.png
 authors:
