@@ -2,7 +2,7 @@
 title: "Prototype XR Elastodynamics System for Disaster Medical Response"
 date: 2026-03-04 00:00:00 +0800
 selected: true
-pub: "Computer Animation and Virtual Worlds"
+pub: "Computer Animation and Virtual Worlds [CGI]"
 pub_date: "2026"
 cover: /assets/img/cgi/2025.png
 authors:

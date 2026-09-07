@@ -2,7 +2,7 @@
 title: "Visual Simulation of Soil-Structure Destruction with Seepage Flows"
 date: 2021-09-01 00:00:00 +0800
 selected: true
-pub: "Proceedings of the ACM on Computer Graphics and Interactive Techniques (ACM SIGGRAPH / Eurographics Symposium on Computer Animation)"
+pub: "Proceedings of the ACM on Computer Graphics and Interactive Techniques [SCA]"
 pub_date: "2021"
 cover: /assets/img/sca2021_teaser.png
 authors:
